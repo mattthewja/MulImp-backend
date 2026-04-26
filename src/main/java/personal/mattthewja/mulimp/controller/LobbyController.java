@@ -1,8 +1,13 @@
 package personal.mattthewja.mulimp.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import personal.mattthewja.mulimp.dto.CreateLobbyRequest;
 import personal.mattthewja.mulimp.dto.CreateLobbyResponse;
+import personal.mattthewja.mulimp.dto.JoinLobbyRequest;
+import personal.mattthewja.mulimp.dto.JoinLobbyResponse;
+import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 import personal.mattthewja.mulimp.service.LobbyService;
 
 import java.util.Map;
@@ -19,42 +24,26 @@ public class LobbyController {
     }
 
     @PostMapping("/create")
-    public CreateLobbyResponse createLobby(
+    public ResponseEntity<CreateLobbyResponse> createLobby(
             @RequestBody CreateLobbyRequest request
     ) {
-        return lobbyService.createLobby(request);
+        CreateLobbyResponse response = lobbyService.createLobby(request.getUsername());
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
-//    @PostMapping("/{lobbyID}/delete")
-//    public DeleteResponse deleteLobby(
-//            @PathVariable String lobbyID,
-//            @RequestBody DeleteRequest request
-//    ) {
-//
-//        throw new UnsupportedOperationException();
-//
-//    }
+    @PostMapping("/{lobbyID}/join")
+    public ResponseEntity<JoinLobbyResponse> joinLobby(
+            @PathVariable String lobbyID,
+            @RequestBody JoinLobbyRequest request
+    ) {
+        JoinLobbyResponse response = lobbyService.joinPlayerToLobby(lobbyID, request.getUsername());
 
-//    @PostMapping("/{lobbyID}/join")
-//    public JoinResponse joinLobby(
-//            @PathVariable String lobbyID,
-//            @RequestBody JoinRequest request
-//    ) {
-//        String joiner_name = request.getUsername();
-//
-//
-//
-//        throw new UnsupportedOperationException();
-//
-//    }
 
-//    @PostMapping("/{lobbyID}/leave")
-//    public LeaveResponse leaveLobby(
-//            @PathVariable String lobbyID,
-//            @RequestBody LeaveRequest request
-//    ) {
-//
-//        throw new UnsupportedOperationException();
-//
-//    }
+        throw new NotYetImplementedException();
+
+    }
+
 }

@@ -1,7 +1,7 @@
-package personal.mattthewja.mulimp.store.exception;
+package personal.mattthewja.mulimp.exception;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String message) {
-        super("Bad Request Exception: " + message);
+        super(message);
     }
 }

@@ -1,18 +1,59 @@
 package personal.mattthewja.mulimp.store;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
+import personal.mattthewja.mulimp.model.Player;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+@Repository
 public class LobbyStore {
     Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
 
-    public Lobby createLobby(String creator_name) {
-        Lobby lobby = new Lobby(creator_name);
-        lobbies.put(lobby.getLobbyID(), lobby);
+    @PostConstruct
+    public void initDevData() {
+        Lobby devLobby = new Lobby(true,"DevCreator");
+        lobbies.putIfAbsent(devLobby.getLobbyID(), devLobby);
+    }
+
+    public Lobby createLobby(Player creator) {
+        Lobby lobby = new Lobby(creator);
+
+        Lobby previous = lobbies.putIfAbsent(lobby.getLobbyID(), lobby);
+        if (previous != null) {
+            throw new InternalLogicException("UUID collision");
+        }
+
         return lobby;
+    }
+
+    public void addLobbyToLobbies(Lobby lobby) {
+        Lobby previous = lobbies.putIfAbsent(lobby.getLobbyID(), lobby);
+        if (previous != null) {
+            throw new InternalLogicException("UUID collision");
+        }
+    }
+
+    public Lobby addPlayerToLobby(String lobbyID, String username) {
+
+        throw new NotYetImplementedException();
+
+    }
+
+    public Lobby removePlayerFromLobby(String lobbyID, String username) {
+
+        throw new NotYetImplementedException();
+
+    }
+
+    public Player getPlayerNamed(String lobbyID, String username) {
+
+        throw new NotYetImplementedException();
+
     }
 }

@@ -1,12 +1,10 @@
-package personal.mattthewja.mulimp.controller;
+package personal.mattthewja.mulimp.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import personal.mattthewja.mulimp.dto.DefaultErrorResponse;
-import personal.mattthewja.mulimp.store.exception.BadRequestException;
-import personal.mattthewja.mulimp.store.exception.InternalLogicException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

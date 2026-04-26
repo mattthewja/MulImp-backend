@@ -1,7 +1,7 @@
-package personal.mattthewja.mulimp.store.exception;
+package personal.mattthewja.mulimp.exception;
 
 public class InternalLogicException extends RuntimeException {
     public InternalLogicException(String data) {
-        super("Internal Logic Error: " + data);
+        super(data);
     }
 }

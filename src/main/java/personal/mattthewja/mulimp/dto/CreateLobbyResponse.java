@@ -1,5 +1,6 @@
 package personal.mattthewja.mulimp.dto;
 
+import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 
@@ -11,11 +12,12 @@ public class CreateLobbyResponse {
     private final String userID;
     private final List<String> players = new ArrayList<>();
 
-    public CreateLobbyResponse(Lobby lobby) {
+    public CreateLobbyResponse(Player creator, Lobby lobby) {
         this.lobbyID = lobby.getLobbyID();
-        this.userID = lobby.getOwnerID();
-        for (Player player : lobby.getPlayers()) {
-            this.players.add(player.getName());
+        this.userID = creator.getPlayerID();
+
+        for (Player p : lobby.getPlayers()) {
+            this.players.add(p.getName());
         }
     }
 
