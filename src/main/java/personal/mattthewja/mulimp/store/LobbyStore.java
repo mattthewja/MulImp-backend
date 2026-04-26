@@ -7,6 +7,7 @@ import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,12 +24,7 @@ public class LobbyStore {
 
     public Lobby createLobby(Player creator) {
         Lobby lobby = new Lobby(creator);
-
-        Lobby previous = lobbies.putIfAbsent(lobby.getLobbyID(), lobby);
-        if (previous != null) {
-            throw new InternalLogicException("UUID collision");
-        }
-
+        addLobbyToLobbies(lobby);
         return lobby;
     }
 
@@ -39,21 +35,7 @@ public class LobbyStore {
         }
     }
 
-    public Lobby addPlayerToLobby(String lobbyID, String username) {
-
-        throw new NotYetImplementedException();
-
-    }
-
-    public Lobby removePlayerFromLobby(String lobbyID, String username) {
-
-        throw new NotYetImplementedException();
-
-    }
-
-    public Player getPlayerNamed(String lobbyID, String username) {
-
-        throw new NotYetImplementedException();
-
+    public Lobby getLobbyWithID(String lobbyID) {
+        return lobbies.get(lobbyID);
     }
 }

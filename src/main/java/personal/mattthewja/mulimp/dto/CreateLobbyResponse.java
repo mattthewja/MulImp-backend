@@ -10,15 +10,12 @@ import java.util.List;
 public class CreateLobbyResponse {
     private final String lobbyID;
     private final String userID;
-    private final List<String> players = new ArrayList<>();
+    private final List<String> players;
 
     public CreateLobbyResponse(Player creator, Lobby lobby) {
         this.lobbyID = lobby.getLobbyID();
         this.userID = creator.getPlayerID();
-
-        for (Player p : lobby.getPlayers()) {
-            this.players.add(p.getName());
-        }
+        this.players = lobby.getPlayersAsStrings();
     }
 
     public String getLobbyID() {

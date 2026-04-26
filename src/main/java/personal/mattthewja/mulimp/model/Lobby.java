@@ -14,6 +14,12 @@ public class Lobby {
         Player creator = new Player(creator_name);
         this.lobbyID = "0";
         players = new ArrayList<>();
+        players.add(creator);
+        players.add(new Player("1"));
+        players.add(new Player("2"));
+        players.add(new Player("3"));
+        players.add(new Player("4"));
+        players.add(new Player("5"));
     }
 
     public Lobby(String creator_name) {
@@ -42,8 +48,21 @@ public class Lobby {
         return owner;
     }
 
+    public void setOwner(Player new_owner) {
+        this.owner = new_owner;
+    }
+
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public List<String> getPlayersAsStrings() {
+        List<String> player_names = new ArrayList<>();
+        for (Player p : players) {
+            player_names.add(p.getName());
+        }
+
+        return player_names;
     }
 
     public Player getPlayerNamed(String name) {
@@ -64,7 +83,11 @@ public class Lobby {
         return players.size() >= maxLobbySize;
     }
 
-    public void setOwner(Player newOwner) {
-        this.owner = newOwner;
+    public void addPlayerToLobby(Player player) {
+        this.players.add(player);
+    }
+
+    public void removePlayerFromLobby(Player player) {
+        this.players.remove(player);
     }
 }

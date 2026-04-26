@@ -21,4 +21,26 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new DefaultErrorResponse("BAD_REQUEST", e.getMessage()));
     }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handleDuplicatePlayerNameError(DuplicatePlayerNameException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new DefaultErrorResponse("DUPLICATE_NAME", e.getMessage()));
+
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handleLobbyFullError(LobbyFullException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new DefaultErrorResponse("LOBBY_FULL", e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handleLobbyNotFoundError(LobbyNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new DefaultErrorResponse("LOBBY_NOT_FOUND", e.getMessage()));
+    }
 }

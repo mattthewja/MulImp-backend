@@ -41,9 +41,9 @@ public class LobbyController {
     ) {
         JoinLobbyResponse response = lobbyService.joinPlayerToLobby(lobbyID, request.getUsername());
 
-
-        throw new NotYetImplementedException();
-
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
 }
