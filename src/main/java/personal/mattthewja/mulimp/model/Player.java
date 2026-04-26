@@ -1,4 +1,4 @@
-package personal.mattthewja.mulimp.player;
+package personal.mattthewja.mulimp.model;
 
 import java.util.UUID;
 

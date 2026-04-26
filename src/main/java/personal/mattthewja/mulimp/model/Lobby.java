@@ -1,6 +1,4 @@
-package personal.mattthewja.mulimp.lobby;
-
-import personal.mattthewja.mulimp.player.Player;
+package personal.mattthewja.mulimp.model;
 
 import java.util.ArrayList;
 import java.util.List;

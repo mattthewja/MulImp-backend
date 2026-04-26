@@ -1,6 +1,6 @@
 package personal.mattthewja.mulimp.dto;
 
-public class CreateRequest {
+public class CreateLobbyRequest {
     private String username;
 
     public String getUsername() {
