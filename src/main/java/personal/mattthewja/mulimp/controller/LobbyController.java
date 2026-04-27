@@ -55,10 +55,10 @@ public class LobbyController {
     }
 
     @GetMapping("/{lobbyId}")
-    public ResponseEntity<LobbyInformationResponse> getLobbyInfo(
+    public ResponseEntity<GetLobbyResponse> getLobbyInfo(
             @PathVariable String lobbyId
     ) {
-        LobbyInformationResponse response = lobbyService.getLobbyInfo(lobbyId);
+        GetLobbyResponse response = lobbyService.getLobbyInfo(lobbyId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

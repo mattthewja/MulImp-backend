@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import personal.mattthewja.mulimp.dto.CreateLobbyResponse;
 import personal.mattthewja.mulimp.dto.JoinLobbyResponse;
 import personal.mattthewja.mulimp.dto.LeaveLobbyResponse;
-import personal.mattthewja.mulimp.dto.LobbyInformationResponse;
+import personal.mattthewja.mulimp.dto.GetLobbyResponse;
 import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
@@ -63,12 +63,12 @@ public class LobbyService {
         return new LeaveLobbyResponse(true);
     }
 
-    public LobbyInformationResponse getLobbyInfo(String lobbyID) {
+    public GetLobbyResponse getLobbyInfo(String lobbyID) {
         Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
         if (lobby == null) {
             throw new LobbyNotFoundException(lobbyID);
         }
 
-        return new LobbyInformationResponse(lobby);
+        return new GetLobbyResponse(lobby);
     }
 }
