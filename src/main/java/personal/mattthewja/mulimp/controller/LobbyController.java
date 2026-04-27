@@ -5,11 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import personal.mattthewja.mulimp.dto.*;
-import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 import personal.mattthewja.mulimp.service.LobbyService;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 // stopgap fix before CORS is enabled
 @CrossOrigin(origins = "http://localhost:5173")
@@ -34,35 +30,35 @@ public class LobbyController {
                 .body(response);
     }
 
-    @PostMapping("/{lobbyID}/players")
+    @PostMapping("/{lobbyId}/players")
     public ResponseEntity<JoinLobbyResponse> joinLobby(
-            @PathVariable String lobbyID,
+            @PathVariable String lobbyId,
             @Valid @RequestBody JoinLobbyRequest request
     ) {
-        JoinLobbyResponse response = lobbyService.joinPlayerToLobby(lobbyID, request.getUsername());
+        JoinLobbyResponse response = lobbyService.joinPlayerToLobby(lobbyId, request.getUsername());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
     }
 
-    @DeleteMapping("/{lobbyID}/players/{playerId}")
+    @DeleteMapping("/{lobbyId}/players/{playerId}")
     public ResponseEntity<Void> leaveLobby(
-            @PathVariable String lobbyID,
+            @PathVariable String lobbyId,
             @PathVariable String playerId
     ) {
-        LeaveLobbyResponse response = lobbyService.leavePlayerFromLobby(lobbyID, playerId);
+        LeaveLobbyResponse response = lobbyService.leavePlayerFromLobby(lobbyId, playerId);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
-    @GetMapping("/{lobbyID}")
+    @GetMapping("/{lobbyId}")
     public ResponseEntity<LobbyInformationResponse> getLobbyInfo(
-            @PathVariable String lobbyID
+            @PathVariable String lobbyId
     ) {
-        LobbyInformationResponse response = lobbyService.getLobbyInfo(lobbyID);
+        LobbyInformationResponse response = lobbyService.getLobbyInfo(lobbyId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

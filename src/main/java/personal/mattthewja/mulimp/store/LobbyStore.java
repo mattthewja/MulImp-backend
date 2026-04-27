@@ -1,15 +1,12 @@
 package personal.mattthewja.mulimp.store;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -19,7 +16,7 @@ public class LobbyStore {
     @PostConstruct
     public void initDevData() {
         Lobby devLobby = new Lobby(true,"DevCreator");
-        lobbies.putIfAbsent(devLobby.getLobbyID(), devLobby);
+        lobbies.putIfAbsent(devLobby.getLobbyId(), devLobby);
     }
 
     public Lobby createLobby(Player creator) {
@@ -29,7 +26,7 @@ public class LobbyStore {
     }
 
     public void addLobbyToLobbies(Lobby lobby) {
-        Lobby previous = lobbies.putIfAbsent(lobby.getLobbyID(), lobby);
+        Lobby previous = lobbies.putIfAbsent(lobby.getLobbyId(), lobby);
         if (previous != null) {
             throw new InternalLogicException("UUID collision");
         }

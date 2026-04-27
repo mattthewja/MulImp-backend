@@ -10,8 +10,6 @@ import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 import personal.mattthewja.mulimp.store.LobbyStore;
 
-import java.util.List;
-
 @Service
 public class LobbyService {
     private final LobbyStore lobbyStore;
@@ -55,7 +53,7 @@ public class LobbyService {
             throw new LobbyNotFoundException(lobbyID);
         }
 
-        Player leaving_player = lobby.getPlayerWithID(playerID);
+        Player leaving_player = lobby.getPlayerWithId(playerID);
         if (leaving_player == null) {
             throw new BadRequestException("Player with such an ID was not found in lobby");
         }

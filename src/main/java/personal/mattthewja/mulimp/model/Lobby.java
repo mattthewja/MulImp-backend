@@ -5,14 +5,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class Lobby {
-    private final String lobbyID;
+    private final String lobbyId;
     private Player owner;
     private final List<Player> players;
     private final static int maxLobbySize = 8;
 
     public Lobby(boolean dev, String creator_name) {
         Player creator = new Player(creator_name);
-        this.lobbyID = "0";
+        this.lobbyId = "0";
         players = new ArrayList<>();
         players.add(creator);
         players.add(new Player("1"));
@@ -27,7 +27,7 @@ public class Lobby {
     public Lobby(String creator_name) {
         Player creator = new Player(creator_name);
 
-        lobbyID = UUID.randomUUID().toString();
+        lobbyId = UUID.randomUUID().toString();
         owner = creator;
 
         players = new ArrayList<>();
@@ -35,15 +35,15 @@ public class Lobby {
     }
 
     public Lobby(Player creator) {
-        lobbyID = UUID.randomUUID().toString();
+        lobbyId = UUID.randomUUID().toString();
         owner = creator;
 
         players = new ArrayList<>();
         players.add(creator);
     }
 
-    public String getLobbyID() {
-        return lobbyID;
+    public String getLobbyId() {
+        return lobbyId;
     }
 
     public Player getOwner() {
@@ -76,9 +76,9 @@ public class Lobby {
         return null;
     }
 
-    public Player getPlayerWithID(String playerID) {
+    public Player getPlayerWithId(String playerID) {
         for (Player p : players) {
-            if (p.getPlayerID().equals(playerID)) {
+            if (p.getPlayerId().equals(playerID)) {
                 return p;
             }
         }
