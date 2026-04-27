@@ -1,9 +1,12 @@
 package personal.mattthewja.mulimp.dto;
 
-public class CreateLobbyRequest {
-    private String username;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
-    public String getUsername() {
-        return username;
-    }
+@Getter
+public class CreateLobbyRequest {
+    @NotBlank(message = "Username is required")
+    @Size(max = 20, message = "Username too long")
+    private String username;
 }

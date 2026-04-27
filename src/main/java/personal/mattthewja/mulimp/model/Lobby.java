@@ -20,6 +20,8 @@ public class Lobby {
         players.add(new Player("3"));
         players.add(new Player("4"));
         players.add(new Player("5"));
+        players.add(new Player("6"));
+        players.add(new Player("7"));
     }
 
     public Lobby(String creator_name) {
@@ -68,6 +70,15 @@ public class Lobby {
     public Player getPlayerNamed(String name) {
         for (Player p : players) {
             if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerWithID(String playerID) {
+        for (Player p : players) {
+            if (p.getPlayerID().equals(playerID)) {
                 return p;
             }
         }

@@ -1,13 +1,28 @@
 package personal.mattthewja.mulimp.exception;
 
+import lombok.Builder;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import personal.mattthewja.mulimp.dto.DefaultErrorResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<DefaultErrorResponse> handleValidation(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult()
+                .getFieldErrors()
+                .get(0)
+                .getDefaultMessage();
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new DefaultErrorResponse("INVALID_REQUEST", e.getMessage()));
+    }
+
     @ExceptionHandler
     public ResponseEntity<DefaultErrorResponse> handleInternalServerError(InternalLogicException e) {
         return ResponseEntity

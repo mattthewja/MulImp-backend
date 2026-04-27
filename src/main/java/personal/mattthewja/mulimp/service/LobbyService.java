@@ -3,10 +3,14 @@ package personal.mattthewja.mulimp.service;
 import org.springframework.stereotype.Service;
 import personal.mattthewja.mulimp.dto.CreateLobbyResponse;
 import personal.mattthewja.mulimp.dto.JoinLobbyResponse;
+import personal.mattthewja.mulimp.dto.LeaveLobbyResponse;
+import personal.mattthewja.mulimp.dto.LobbyInformationResponse;
 import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 import personal.mattthewja.mulimp.store.LobbyStore;
+
+import java.util.List;
 
 @Service
 public class LobbyService {
@@ -16,18 +20,7 @@ public class LobbyService {
         this.lobbyStore = lobbyStore;
     }
 
-    public void validateUsername(String username) {
-        if (username.isBlank()) {
-            throw new BadRequestException("Username cannot be blank");
-        }
-        if (username.length() > 20) {
-            throw new BadRequestException("Username cannot be greater than 20 characters long");
-        }
-    }
-
     public CreateLobbyResponse createLobby(String username) {
-        validateUsername(username);
-
         Player creator = new Player(username);
         Lobby lobby = lobbyStore.createLobby(creator);
 
@@ -35,8 +28,6 @@ public class LobbyService {
     }
 
     public JoinLobbyResponse joinPlayerToLobby(String lobbyID, String username) {
-        validateUsername(username);
-
         Player player = new Player(username);
         Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
 
@@ -57,4 +48,29 @@ public class LobbyService {
         return new JoinLobbyResponse(player, lobby);
     }
 
+    public LeaveLobbyResponse leavePlayerFromLobby(String lobbyID, String playerID) {
+
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
+        if (lobby == null) {
+            throw new LobbyNotFoundException(lobbyID);
+        }
+
+        Player leaving_player = lobby.getPlayerWithID(playerID);
+        if (leaving_player == null) {
+            throw new BadRequestException("Player with such an ID was not found in lobby");
+        }
+
+        lobby.removePlayerFromLobby(leaving_player);
+
+        return new LeaveLobbyResponse(true);
+    }
+
+    public LobbyInformationResponse getLobbyInfo(String lobbyID) {
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
+        if (lobby == null) {
+            throw new LobbyNotFoundException(lobbyID);
+        }
+
+        return new LobbyInformationResponse(lobby);
+    }
 }

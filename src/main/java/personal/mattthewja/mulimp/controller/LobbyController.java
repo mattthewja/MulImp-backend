@@ -1,18 +1,18 @@
 package personal.mattthewja.mulimp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import personal.mattthewja.mulimp.dto.CreateLobbyRequest;
-import personal.mattthewja.mulimp.dto.CreateLobbyResponse;
-import personal.mattthewja.mulimp.dto.JoinLobbyRequest;
-import personal.mattthewja.mulimp.dto.JoinLobbyResponse;
+import personal.mattthewja.mulimp.dto.*;
 import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 import personal.mattthewja.mulimp.service.LobbyService;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+// stopgap fix before CORS is enabled
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/lobby")
 public class LobbyController {
@@ -23,9 +23,9 @@ public class LobbyController {
         this.lobbyService = lobbyService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseEntity<CreateLobbyResponse> createLobby(
-            @RequestBody CreateLobbyRequest request
+            @Valid @RequestBody CreateLobbyRequest request
     ) {
         CreateLobbyResponse response = lobbyService.createLobby(request.getUsername());
 
@@ -34,12 +34,35 @@ public class LobbyController {
                 .body(response);
     }
 
-    @PostMapping("/{lobbyID}/join")
+    @PostMapping("/{lobbyID}/players")
     public ResponseEntity<JoinLobbyResponse> joinLobby(
             @PathVariable String lobbyID,
-            @RequestBody JoinLobbyRequest request
+            @Valid @RequestBody JoinLobbyRequest request
     ) {
         JoinLobbyResponse response = lobbyService.joinPlayerToLobby(lobbyID, request.getUsername());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @DeleteMapping("/{lobbyID}/players/{playerId}")
+    public ResponseEntity<Void> leaveLobby(
+            @PathVariable String lobbyID,
+            @PathVariable String playerId
+    ) {
+        LeaveLobbyResponse response = lobbyService.leavePlayerFromLobby(lobbyID, playerId);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @GetMapping("/{lobbyID}")
+    public ResponseEntity<LobbyInformationResponse> getLobbyInfo(
+            @PathVariable String lobbyID
+    ) {
+        LobbyInformationResponse response = lobbyService.getLobbyInfo(lobbyID);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

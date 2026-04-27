@@ -1,19 +1,16 @@
 package personal.mattthewja.mulimp.dto;
 
 import personal.mattthewja.mulimp.model.Lobby;
-import personal.mattthewja.mulimp.model.Player;
 
 import java.util.List;
 
-public class JoinLobbyResponse {
+public class LobbyInformationResponse {
     private final String lobbyID;
     private final List<String> players;
-    private final String playerID;
 
-    public JoinLobbyResponse(Player player, Lobby lobby) {
+    public LobbyInformationResponse(Lobby lobby) {
         this.lobbyID = lobby.getLobbyID();
         this.players = lobby.getPlayersAsStrings();
-        this.playerID = player.getPlayerID();
     }
 
     public String getLobbyID() {
@@ -22,9 +19,5 @@ public class JoinLobbyResponse {
 
     public List<String> getPlayers() {
         return players;
-    }
-
-    public String getPlayerID() {
-        return playerID;
     }
 }
