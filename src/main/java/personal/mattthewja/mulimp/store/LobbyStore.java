@@ -25,6 +25,11 @@ public class LobbyStore {
         return lobby;
     }
 
+    @SuppressWarnings("all")
+    public Lobby removeLobby(Lobby lobby) {
+        return lobbies.remove(lobby.getLobbyId());
+    }
+
     public void addLobbyToLobbies(Lobby lobby) {
         Lobby previous = lobbies.putIfAbsent(lobby.getLobbyId(), lobby);
         if (previous != null) {

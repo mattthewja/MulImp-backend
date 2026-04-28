@@ -1,11 +1,18 @@
 package personal.mattthewja.mulimp.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+// holy crap is lombok incredible...
+// what in the -boilerplate
+@Getter
 public class Lobby {
     private final String lobbyId;
+    @Setter
     private Player owner;
     private final List<Player> players;
     private final static int maxLobbySize = 8;
@@ -42,22 +49,6 @@ public class Lobby {
         players.add(creator);
     }
 
-    public String getLobbyId() {
-        return lobbyId;
-    }
-
-    public Player getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player new_owner) {
-        this.owner = new_owner;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
     public List<String> getPlayersAsStrings() {
         List<String> player_names = new ArrayList<>();
         for (Player p : players) {
@@ -92,6 +83,10 @@ public class Lobby {
 
     public boolean isFull() {
         return players.size() >= maxLobbySize;
+    }
+
+    public boolean isEmpty() {
+        return players.isEmpty();
     }
 
     public void addPlayerToLobby(Player player) {

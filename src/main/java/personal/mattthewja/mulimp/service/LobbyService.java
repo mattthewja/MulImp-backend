@@ -60,6 +60,16 @@ public class LobbyService {
 
         lobby.removePlayerFromLobby(leaving_player);
 
+        if (lobby.isEmpty()) {
+            lobbyStore.removeLobby(lobby);
+            return new LeaveLobbyResponse(true);
+        }
+
+        if (leaving_player.equals(lobby.getOwner())) {
+            Player next_owner = lobby.getPlayers().getFirst();
+            lobby.setOwner(next_owner);
+        }
+
         return new LeaveLobbyResponse(true);
     }
 
