@@ -1,10 +1,7 @@
 package personal.mattthewja.mulimp.service;
 
 import org.springframework.stereotype.Service;
-import personal.mattthewja.mulimp.dto.CreateLobbyResponse;
-import personal.mattthewja.mulimp.dto.JoinLobbyResponse;
-import personal.mattthewja.mulimp.dto.LeaveLobbyResponse;
-import personal.mattthewja.mulimp.dto.GetLobbyResponse;
+import personal.mattthewja.mulimp.dto.*;
 import personal.mattthewja.mulimp.exception.*;
 import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
@@ -25,17 +22,17 @@ public class LobbyService {
         return new CreateLobbyResponse(creator, lobby);
     }
 
-    public JoinLobbyResponse joinPlayerToLobby(String lobbyID, String username) {
+    public JoinLobbyResponse joinPlayerToLobby(String lobbyId, String username) {
         Player player = new Player(username);
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
 
         if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyID);
+            throw new LobbyNotFoundException(lobbyId);
         }
 
         synchronized (lobby) {
             if (lobby.isFull()) {
-                throw new LobbyFullException(lobbyID);
+                throw new LobbyFullException(lobbyId);
             }
             if (lobby.hasPlayerNamed(username)) {
                 throw new DuplicatePlayerNameException(username);
@@ -46,14 +43,14 @@ public class LobbyService {
         return new JoinLobbyResponse(player, lobby);
     }
 
-    public LeaveLobbyResponse leavePlayerFromLobby(String lobbyID, String playerID) {
+    public LeaveLobbyResponse leavePlayerFromLobby(String lobbyId, String playerId) {
 
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
         if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyID);
+            throw new LobbyNotFoundException(lobbyId);
         }
 
-        Player leaving_player = lobby.getPlayerWithId(playerID);
+        Player leaving_player = lobby.getPlayerWithId(playerId);
         if (leaving_player == null) {
             throw new BadRequestException("Player with such an ID was not found in lobby");
         }
@@ -73,12 +70,18 @@ public class LobbyService {
         return new LeaveLobbyResponse(true);
     }
 
-    public GetLobbyResponse getLobbyInfo(String lobbyID) {
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyID);
+    public GetLobbyResponse getLobbyInfo(String lobbyId) {
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
         if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyID);
+            throw new LobbyNotFoundException(lobbyId);
         }
 
         return new GetLobbyResponse(lobby);
+    }
+
+    public GetLobbyStateResponse getLobbyState(String lobbyId) {
+        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
+
+        return new GetLobbyStateResponse(lobby.getLobbyState());
     }
 }
