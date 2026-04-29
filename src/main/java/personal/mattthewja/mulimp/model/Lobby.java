@@ -3,6 +3,7 @@ package personal.mattthewja.mulimp.model;
 import lombok.Getter;
 import lombok.Setter;
 import personal.mattthewja.mulimp.dto.GetGameStateResponse;
+import personal.mattthewja.mulimp.exception.GameHasStartedException;
 import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Lobby {
     private final static int maxLobbySize = 8;
     private LobbyState lobbyState = LobbyState.IN_LOBBY;
 
-    private Game game;
+    private final Game game = new Game();
 
     public Lobby(boolean dev, String creator_name) {
         Player creator = new Player(creator_name);
@@ -104,17 +105,14 @@ public class Lobby {
 
     public void startGame() {
         if (lobbyState != LobbyState.IN_LOBBY) {
-            // game already started exception
-
-            throw new NotYetImplementedException();
-
+            throw new GameHasStartedException();
         }
 
         // somehow generate these questions
         // consider a QuestionPairStore
 
-        this.game = new Game(this, "real q", "imp q");
-        this.lobbyState = LobbyState.IN_GAME;
+        game.startGame(this.getPlayers(), "Real question", "Imposter Question");
+        lobbyState = LobbyState.IN_GAME;
     }
 
     public GetGameStateResponse GetGameState() {

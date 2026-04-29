@@ -37,7 +37,15 @@ public class LobbyStore {
         }
     }
 
-    public Lobby getLobbyWithID(String lobbyID) {
-        return lobbies.get(lobbyID);
+    public Lobby getLobbyWithID(String lobbyId) {
+        return lobbies.get(lobbyId);
+    }
+
+    public Lobby getLobbyOrThrow(String lobbyId) {
+        Lobby lobby = lobbies.get(lobbyId);
+        if (lobby == null) {
+            throw new LobbyNotFoundException(lobbyId);
+        }
+        return lobby;
     }
 }

@@ -7,25 +7,25 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 public class Game {
-    private final int ANSWERING_DURATION = 20;
-    private final int DISCUSSION_DURATION = 180;
+    private static final int ANSWERING_DURATION = 20;
+    private static final int DISCUSSION_DURATION = 180;
 
-    private final Player imposterPlayer;
+    private Player imposterPlayer;
     private final Map<Player, String> playerAnswers = new HashMap<>();
     private final Map<Player, Player> playerVotes = new HashMap<>();
 
-    private final String realQuestion;
-    private final String imposterQuestion;
+    private String realQuestion;
+    private String imposterQuestion;
     private Instant phaseEndsAt;
 
-    private GameState gameState;
+    private GameState gameState = GameState.IN_LOBBY;
 
-    public Game(Lobby lobby, String realQuestion, String imposterQuestion) {
-        List<Player> players = lobby.getPlayers();
-        imposterPlayer = players.get((int) Math.floor(Math.random() * players.size()));
+    public void startGame(List<Player> players, String realQuestion, String imposterQuestion) {
+        this.imposterPlayer = players.get((int) Math.floor(Math.random() * players.size()));
         this.realQuestion = realQuestion;
         this.imposterQuestion = imposterQuestion;
 
@@ -34,8 +34,12 @@ public class Game {
             playerVotes.put(player, player); // default self vote on no vote
         }
 
-        phaseEndsAt = Instant.now().plus(20, ChronoUnit.SECONDS);
+        phaseEndsAt = Instant.now().plus(ANSWERING_DURATION, ChronoUnit.SECONDS);
         gameState = GameState.ANSWERING;
+    }
+
+    public boolean hasPlayerAnswered(Player player) {
+        return !Objects.equals(playerAnswers.get(player), "");
     }
 
     public String getAnswerOfPlayer(Player player) {
@@ -64,6 +68,10 @@ public class Game {
                 phaseEndsAt.plus(9999, ChronoUnit.HOURS);
             }
         }
+    }
+
+    public boolean isGameDone() {
+        return gameState == GameState.IN_LOBBY;
     }
 
     public String getQuestionFor(Player player) {

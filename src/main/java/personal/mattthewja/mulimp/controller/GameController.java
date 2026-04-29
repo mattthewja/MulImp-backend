@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import personal.mattthewja.mulimp.dto.GetGameStateResponse;
+import personal.mattthewja.mulimp.dto.GetPlayerStateResponse;
 import personal.mattthewja.mulimp.dto.GetStateResponse;
 import personal.mattthewja.mulimp.dto.StartGameResponse;
 import personal.mattthewja.mulimp.exception.NotYetImplementedException;
@@ -16,8 +18,11 @@ import personal.mattthewja.mulimp.service.LobbyService;
 public class GameController {
 
     private final GameService gameService;
+    private final LobbyService lobbyService;
 
-    public GameController(GameService gameService) { this.gameService = gameService; }
+    public GameController(GameService gameService, LobbyService lobbyService) { this.gameService = gameService;
+        this.lobbyService = lobbyService;
+    }
 
     @PostMapping("/start")
     public ResponseEntity<StartGameResponse> startGame(
@@ -31,12 +36,27 @@ public class GameController {
     }
 
     @GetMapping("/state")
-    public ResponseEntity<GetStateResponse> getState(
+    public ResponseEntity<GetGameStateResponse> getState(
             @PathVariable String lobbyId
     ) {
+        GetGameStateResponse response = gameService.getGameState(lobbyId);
 
-        throw new NotYetImplementedException();
-
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
+
+    @GetMapping("/players/{playerId}/state")
+    public ResponseEntity<GetPlayerStateResponse> getPlayerState(
+            @PathVariable String lobbyId,
+            @PathVariable String playerId
+    ) {
+        GetPlayerStateResponse response = gameService.getPlayerState(lobbyId, playerId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
 
 }

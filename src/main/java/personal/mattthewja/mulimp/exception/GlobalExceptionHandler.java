@@ -58,4 +58,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new DefaultErrorResponse("LOBBY_NOT_FOUND", e.getMessage()));
     }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handlePlayerNotFoundError(PlayerNotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new DefaultErrorResponse("PLAYER_NOT_FOUND", e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handleGameHasNotStarted(GameHasNotStartedException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new DefaultErrorResponse("GAME_NOT_STARTED", e.getMessage()));
+    }
 }

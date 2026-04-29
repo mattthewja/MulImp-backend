@@ -24,11 +24,7 @@ public class LobbyService {
 
     public JoinLobbyResponse joinPlayerToLobby(String lobbyId, String username) {
         Player player = new Player(username);
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
-
-        if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyId);
-        }
+        Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
 
         synchronized (lobby) {
             if (lobby.isFull()) {
@@ -44,11 +40,7 @@ public class LobbyService {
     }
 
     public LeaveLobbyResponse leavePlayerFromLobby(String lobbyId, String playerId) {
-
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
-        if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyId);
-        }
+        Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
 
         Player leaving_player = lobby.getPlayerWithId(playerId);
         if (leaving_player == null) {
@@ -71,16 +63,13 @@ public class LobbyService {
     }
 
     public GetLobbyResponse getLobbyInfo(String lobbyId) {
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
-        if (lobby == null) {
-            throw new LobbyNotFoundException(lobbyId);
-        }
+        Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
 
         return new GetLobbyResponse(lobby);
     }
 
     public GetLobbyStateResponse getLobbyState(String lobbyId) {
-        Lobby lobby = lobbyStore.getLobbyWithID(lobbyId);
+        Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
 
         return new GetLobbyStateResponse(lobby.getLobbyState());
     }
