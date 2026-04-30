@@ -124,7 +124,7 @@ public class Lobby {
     }
 
     public void startGame() {
-        if (lobbyState != LobbyState.IN_LOBBY) {
+        if (game.getGameState() != GameState.IN_LOBBY) {
             throw new GameHasStartedException();
         }
 

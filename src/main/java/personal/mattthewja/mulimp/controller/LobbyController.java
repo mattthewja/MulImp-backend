@@ -65,15 +65,15 @@ public class LobbyController {
                 .body(response);
     }
 
-    @Deprecated
-    @GetMapping("/{lobbyId}/state")
-    public ResponseEntity<GetLobbyStateResponse> getLobbyState(
-            @PathVariable String lobbyId
-    ) {
-        GetLobbyStateResponse response = lobbyService.getLobbyState(lobbyId);
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
-    }
+//    @Deprecated
+//    @GetMapping("/{lobbyId}/state")
+//    public ResponseEntity<GetLobbyStateResponse> getLobbyState(
+//            @PathVariable String lobbyId
+//    ) {
+//        GetLobbyStateResponse response = lobbyService.getLobbyState(lobbyId);
+//
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(response);
+//    }
 }

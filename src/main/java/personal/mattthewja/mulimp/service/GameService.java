@@ -44,7 +44,10 @@ public class GameService {
             GameState gameState = game.getGameState();
             String question = game.getQuestionFor(player);
 
-            return new GetPlayerStateResponse(gameState, question, game.hasPlayerAnswered(player));
+            return new GetPlayerStateResponse(gameState, question,
+                    game.hasPlayerAnswered(player),
+                    game.hasPlayerVoted(player)
+            );
         }
     }
 

@@ -33,6 +33,8 @@ public class Game {
         this.realQuestion = realQuestion;
         this.imposterQuestion = imposterQuestion;
 
+        this.playerAnswers.clear();
+        this.playerVotes.clear();
 //        for (Player player : players) {
 //            playerAnswers.put(player, "");
 //            playerVotes.put(player, player); // default self vote on no vote
@@ -124,5 +126,33 @@ public class Game {
 
     private void returnToLobby() {
         gameState = GameState.IN_LOBBY;
+    }
+
+    public Player getMostVoted() {
+        if (gameState != GameState.RESULTS || playerVotes.isEmpty()) return null;
+
+        Map<Player, Integer> voteCounts = new HashMap<>();
+
+        for (Player votedPlayer : playerVotes.values()) {
+            voteCounts.put(
+                    votedPlayer,
+                    voteCounts.getOrDefault(votedPlayer, 0) + 1
+            );
+        }
+
+        Player mostVoted = null;
+        int maxVotes = 0;
+
+        for (var entry : voteCounts.entrySet()) {
+            if (entry.getValue() > maxVotes) {
+                mostVoted = entry.getKey();
+                maxVotes = entry.getValue();
+            } else if (entry.getValue() == maxVotes) {
+                // do nothing for now, but actually need
+                // tie logic
+            }
+        }
+
+        return mostVoted;
     }
 }
