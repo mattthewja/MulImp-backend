@@ -65,6 +65,7 @@ public class LobbyController {
                 .body(response);
     }
 
+    @Deprecated
     @GetMapping("/{lobbyId}/state")
     public ResponseEntity<GetLobbyStateResponse> getLobbyState(
             @PathVariable String lobbyId

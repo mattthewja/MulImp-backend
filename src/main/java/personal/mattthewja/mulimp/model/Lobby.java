@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import personal.mattthewja.mulimp.dto.GetGameStateResponse;
 import personal.mattthewja.mulimp.exception.GameHasStartedException;
-import personal.mattthewja.mulimp.exception.NotYetImplementedException;
+import personal.mattthewja.mulimp.exception.PlayerNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,13 +73,33 @@ public class Lobby {
         return null;
     }
 
-    public Player getPlayerWithId(String playerID) {
+    public Player getPlayerNamedOrThrow(String name) {
         for (Player p : players) {
-            if (p.getPlayerId().equals(playerID)) {
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
+
+        throw new PlayerNotFoundException();
+    }
+
+    public Player getPlayerWithId(String playerId) {
+        for (Player p : players) {
+            if (p.getPlayerId().equals(playerId)) {
+                return p;
+            }
+        }
+
         return null;
+    }
+
+    public Player getPlayerWithIdOrThrow(String playerId) {
+        Player player = getPlayerWithId(playerId);
+        if (player == null) {
+            throw new PlayerNotFoundException();
+        } else {
+            return player;
+        }
     }
 
     public boolean hasPlayerNamed(String name) {
@@ -120,7 +140,7 @@ public class Lobby {
             Game game = this.game;
             game.advanceGameState();
 
-            return new GetGameStateResponse(game.getGameState());
+            return new GetGameStateResponse(this);
         }
     }
 }

@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import personal.mattthewja.mulimp.dto.GetGameStateResponse;
-import personal.mattthewja.mulimp.dto.GetPlayerStateResponse;
-import personal.mattthewja.mulimp.dto.GetStateResponse;
-import personal.mattthewja.mulimp.dto.StartGameResponse;
+import personal.mattthewja.mulimp.dto.*;
 import personal.mattthewja.mulimp.exception.NotYetImplementedException;
 import personal.mattthewja.mulimp.service.GameService;
 import personal.mattthewja.mulimp.service.LobbyService;
@@ -18,10 +15,10 @@ import personal.mattthewja.mulimp.service.LobbyService;
 public class GameController {
 
     private final GameService gameService;
-    private final LobbyService lobbyService;
+//    private final LobbyService lobbyService;
 
     public GameController(GameService gameService, LobbyService lobbyService) { this.gameService = gameService;
-        this.lobbyService = lobbyService;
+//        this.lobbyService = lobbyService;
     }
 
     @PostMapping("/start")
@@ -58,5 +55,37 @@ public class GameController {
                 .body(response);
     }
 
+    @PostMapping("/players/{playerId}/answer")
+    public ResponseEntity<PostPlayerAnswerResponse> postPlayerAnswer(
+            @PathVariable String lobbyId,
+            @PathVariable String playerId,
+            @RequestBody PostPlayerAnswerRequest request
+    ) {
+        PostPlayerAnswerResponse response = gameService.submitAnswer(
+                lobbyId,
+                playerId,
+                request.getAnswer()
+        );
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @PostMapping("/players/{playerId}/vote")
+    public ResponseEntity<PostPlayerVoteResponse> postPlayerVote(
+            @PathVariable String lobbyId,
+            @PathVariable String playerId,
+            @RequestBody PostPlayerVoteRequest request
+    ) {
+        PostPlayerVoteResponse response = gameService.submitVote(
+                lobbyId,
+                playerId,
+                request.getVote()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
 }

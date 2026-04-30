@@ -42,35 +42,32 @@ public class LobbyService {
     public LeaveLobbyResponse leavePlayerFromLobby(String lobbyId, String playerId) {
         Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
 
-        Player leaving_player = lobby.getPlayerWithId(playerId);
-        if (leaving_player == null) {
-            throw new BadRequestException("Player with such an ID was not found in lobby");
-        }
+        synchronized (lobby) {
+            Player leaving_player = lobby.getPlayerWithIdOrThrow(playerId);
 
-        lobby.removePlayerFromLobby(leaving_player);
+            lobby.removePlayerFromLobby(leaving_player);
 
-        if (lobby.isEmpty()) {
-            lobbyStore.removeLobby(lobby);
+            if (lobby.isEmpty()) {
+                lobbyStore.removeLobby(lobby);
+                return new LeaveLobbyResponse(true);
+            }
+
+            if (leaving_player.equals(lobby.getOwner())) {
+                Player next_owner = lobby.getPlayers().getFirst();
+                lobby.setOwner(next_owner);
+            }
+
             return new LeaveLobbyResponse(true);
         }
-
-        if (leaving_player.equals(lobby.getOwner())) {
-            Player next_owner = lobby.getPlayers().getFirst();
-            lobby.setOwner(next_owner);
-        }
-
-        return new LeaveLobbyResponse(true);
     }
 
     public GetLobbyResponse getLobbyInfo(String lobbyId) {
         Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
-
         return new GetLobbyResponse(lobby);
     }
 
     public GetLobbyStateResponse getLobbyState(String lobbyId) {
         Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
-
         return new GetLobbyStateResponse(lobby.getLobbyState());
     }
 }

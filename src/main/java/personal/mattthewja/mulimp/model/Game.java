@@ -1,19 +1,22 @@
 package personal.mattthewja.mulimp.model;
 
 import lombok.Getter;
+import personal.mattthewja.mulimp.exception.BadRequestException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Getter
 public class Game {
-    private static final int ANSWERING_DURATION = 20;
-    private static final int DISCUSSION_DURATION = 180;
+    // dev testing, these should be 30, 180, and 10 respectively
+    private static final int ANSWERING_DURATION = 10;
+    private static final int DISCUSSION_DURATION = 10;
+    private static final int RESULTS_DURATION = 10;
 
+    private List<Player> players;
     private Player imposterPlayer;
     private final Map<Player, String> playerAnswers = new HashMap<>();
     private final Map<Player, Player> playerVotes = new HashMap<>();
@@ -25,56 +28,101 @@ public class Game {
     private GameState gameState = GameState.IN_LOBBY;
 
     public void startGame(List<Player> players, String realQuestion, String imposterQuestion) {
+        this.players = players;
         this.imposterPlayer = players.get((int) Math.floor(Math.random() * players.size()));
         this.realQuestion = realQuestion;
         this.imposterQuestion = imposterQuestion;
 
-        for (Player player : players) {
-            playerAnswers.put(player, "");
-            playerVotes.put(player, player); // default self vote on no vote
-        }
+//        for (Player player : players) {
+//            playerAnswers.put(player, "");
+//            playerVotes.put(player, player); // default self vote on no vote
+//        }
 
         phaseEndsAt = Instant.now().plus(ANSWERING_DURATION, ChronoUnit.SECONDS);
         gameState = GameState.ANSWERING;
     }
 
     public boolean hasPlayerAnswered(Player player) {
-        return !Objects.equals(playerAnswers.get(player), "");
+        return playerAnswers.containsKey(player);
     }
 
-    public String getAnswerOfPlayer(Player player) {
-        return playerAnswers.get(player);
+    public boolean hasPlayerVoted(Player player) {
+        return playerVotes.containsKey(player);
     }
 
-    public void setAnswerOfPlayer(Player player, String answer) {
+    public void submitAnswer(Player player, String answer) {
+        if (gameState != GameState.ANSWERING) {
+            throw new BadRequestException("Invalid Game State");
+        }
+
+        if (playerAnswers.containsKey(player)) {
+            throw new BadRequestException("Already answered");
+        }
+
         playerAnswers.put(player, answer);
     }
 
-    public Player getVoteOfPlayer(Player player) {
-        return playerVotes.get(player);
-    }
+    public void submitVote(Player player, Player vote) {
+        if (gameState != GameState.DISCUSSION) {
+            throw new BadRequestException("Invalid Game State");
+        }
 
-    public void setVoteOfPlayer(Player voter, Player voted) {
-        playerVotes.put(voter, voted);
+        if (playerVotes.containsKey(player)) {
+            throw new BadRequestException("Player already voted");
+        }
+
+        playerVotes.put(player, vote);
     }
 
     public void advanceGameState() {
-        if (Instant.now().isAfter(phaseEndsAt)) {
-            if (gameState == GameState.ANSWERING) {
-                gameState = GameState.DISCUSSION;
-                phaseEndsAt.plus(DISCUSSION_DURATION, ChronoUnit.SECONDS);
-            } else if (gameState == GameState.DISCUSSION) {
-                gameState = GameState.IN_LOBBY;
-                phaseEndsAt.plus(9999, ChronoUnit.HOURS);
+        if (!isTimeUp() || isInLobby()) return;
+
+        if (isTimeUp() || allPlayersAnswered()) {
+            switch (gameState) {
+                case ANSWERING -> moveToDiscussion();
+                case DISCUSSION -> moveToResults();
+                case RESULTS -> returnToLobby();
             }
         }
     }
 
-    public boolean isGameDone() {
+    public boolean isInLobby() {
         return gameState == GameState.IN_LOBBY;
     }
 
     public String getQuestionFor(Player player) {
         return player.equals(imposterPlayer) ? imposterQuestion : realQuestion;
+    }
+
+    private boolean allPlayersAnswered() {
+        if (gameState == GameState.ANSWERING) {
+            return players.size() == playerAnswers.size();
+        } else if (gameState == GameState.DISCUSSION) {
+            return players.size() == playerVotes.size();
+        }
+
+        return false;
+    }
+
+    private boolean isTimeUp() {
+        if (gameState == GameState.IN_LOBBY) {
+            return false;
+        }
+
+        return Instant.now().isAfter(phaseEndsAt);
+    }
+
+    private void moveToDiscussion() {
+        gameState = GameState.DISCUSSION;
+        phaseEndsAt = phaseEndsAt.plusSeconds(DISCUSSION_DURATION);
+    }
+
+    private void moveToResults() {
+        gameState = GameState.RESULTS;
+        phaseEndsAt = phaseEndsAt.plusSeconds(RESULTS_DURATION);
+    }
+
+    private void returnToLobby() {
+        gameState = GameState.IN_LOBBY;
     }
 }
