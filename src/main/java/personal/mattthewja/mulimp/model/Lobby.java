@@ -18,7 +18,7 @@ public class Lobby {
     @Setter
     private Player owner;
     private final List<Player> players;
-    private final static int maxLobbySize = 8;
+    private final static int MAX_LOBBY_SIZE = 8;
     private LobbyState lobbyState = LobbyState.IN_LOBBY;
 
     private final Game game = new Game();
@@ -108,7 +108,7 @@ public class Lobby {
     }
 
     public boolean isFull() {
-        return players.size() >= maxLobbySize;
+        return players.size() >= MAX_LOBBY_SIZE;
     }
 
     public boolean isEmpty() {
@@ -119,8 +119,18 @@ public class Lobby {
         this.players.add(player);
     }
 
+    @Deprecated
     public void removePlayerFromLobby(Player player) {
         this.players.remove(player);
+    }
+
+    public void removePlayerFromLobbyOwnerAware(Player player) {
+        this.players.remove(player);
+        if (ownerIs(player)) {
+            if (this.isEmpty()) return;
+            Player new_owner = players.getFirst();
+            setOwner(new_owner);
+        }
     }
 
     public void startGame() {
@@ -141,6 +151,17 @@ public class Lobby {
             game.advanceGameState();
 
             return new GetGameStateResponse(this);
+        }
+    }
+
+    public boolean ownerIs(Player player) {
+        return player == this.owner;
+    }
+
+    public void removeInactivePlayers() {
+        for (Player player : players) {
+            if (player.isActive()) continue;
+            removePlayerFromLobbyOwnerAware(player);
         }
     }
 }

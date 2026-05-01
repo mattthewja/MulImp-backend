@@ -8,6 +8,8 @@ import personal.mattthewja.mulimp.model.Lobby;
 import personal.mattthewja.mulimp.model.Player;
 import personal.mattthewja.mulimp.store.LobbyStore;
 
+import java.time.Instant;
+
 @Service
 public class GameService {
     private final LobbyStore lobbyStore;
@@ -40,13 +42,16 @@ public class GameService {
             Game game = lobby.getGame();
             game.advanceGameState();
             Player player = lobby.getPlayerWithIdOrThrow(playerId);
+            player.setLastSeen(Instant.now());
+            System.out.println(player.getLastSeen());
 
             GameState gameState = game.getGameState();
             String question = game.getQuestionFor(player);
 
             return new GetPlayerStateResponse(gameState, question,
                     game.hasPlayerAnswered(player),
-                    game.hasPlayerVoted(player)
+                    game.hasPlayerVoted(player),
+                    lobby.ownerIs(player)
             );
         }
     }
@@ -77,5 +82,4 @@ public class GameService {
             return new PostPlayerVoteResponse(true);
         }
     }
-
 }

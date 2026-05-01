@@ -45,16 +45,10 @@ public class LobbyService {
         synchronized (lobby) {
             Player leaving_player = lobby.getPlayerWithIdOrThrow(playerId);
 
-            lobby.removePlayerFromLobby(leaving_player);
+            lobby.removePlayerFromLobbyOwnerAware(leaving_player);
 
             if (lobby.isEmpty()) {
                 lobbyStore.removeLobby(lobby);
-                return new LeaveLobbyResponse(true);
-            }
-
-            if (leaving_player.equals(lobby.getOwner())) {
-                Player next_owner = lobby.getPlayers().getFirst();
-                lobby.setOwner(next_owner);
             }
 
             return new LeaveLobbyResponse(true);
@@ -66,6 +60,7 @@ public class LobbyService {
         return new GetLobbyResponse(lobby);
     }
 
+    @Deprecated
     public GetLobbyStateResponse getLobbyState(String lobbyId) {
         Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
         return new GetLobbyStateResponse(lobby.getLobbyState());

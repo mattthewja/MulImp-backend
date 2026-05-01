@@ -11,4 +11,5 @@ public class GetPlayerStateResponse {
     private final String question;
     private final boolean hasAnswered;
     private final boolean hasVoted;
+    private final boolean isOwner;
 }

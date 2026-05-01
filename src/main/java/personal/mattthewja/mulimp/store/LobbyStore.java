@@ -48,4 +48,16 @@ public class LobbyStore {
         }
         return lobby;
     }
+
+    public void cleanupInactiveLobbies() {
+        for (var entry : lobbies.entrySet()) {
+            Lobby lobby = entry.getValue();
+            synchronized (lobby) {
+                lobby.removeInactivePlayers();
+                if (lobby.isEmpty()) {
+                    lobbies.remove(entry.getKey() );
+                }
+            }
+        }
+    }
 }
