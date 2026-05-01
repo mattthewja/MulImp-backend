@@ -42,8 +42,7 @@ public class GameService {
             Game game = lobby.getGame();
             game.advanceGameState();
             Player player = lobby.getPlayerWithIdOrThrow(playerId);
-            player.setLastSeen(Instant.now());
-            System.out.println(player.getLastSeen());
+            player.markActive();
 
             GameState gameState = game.getGameState();
             String question = game.getQuestionFor(player);

@@ -159,9 +159,15 @@ public class Lobby {
     }
 
     public void removeInactivePlayers() {
+        List<Player> inactive_players = new ArrayList<>();
         for (Player player : players) {
             if (player.isActive()) continue;
+            inactive_players.add(player);
+        }
+        for (Player player : inactive_players) {
             removePlayerFromLobbyOwnerAware(player);
+            System.out.println("Remove inactive " + player.getPlayerId() + ":" + player.getName());
+            System.out.println("New Owner " + this.getOwner());
         }
     }
 }

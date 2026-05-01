@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new DefaultErrorResponse("INVALID_REQUEST", e.getMessage()));
+                .body(new DefaultErrorResponse("INVALID_REQUEST", message));
     }
 
     @ExceptionHandler
@@ -71,5 +71,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(new DefaultErrorResponse("GAME_NOT_STARTED", e.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<DefaultErrorResponse> handleUnknown(Exception e) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new DefaultErrorResponse("INTERNAL_ERROR", e.getMessage()));
     }
 }

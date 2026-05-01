@@ -55,7 +55,8 @@ public class LobbyStore {
             synchronized (lobby) {
                 lobby.removeInactivePlayers();
                 if (lobby.isEmpty()) {
-                    lobbies.remove(entry.getKey() );
+                    lobbies.remove(entry.getKey());
+                    System.out.println("Cleanup: " + lobby.getLobbyId());
                 }
             }
         }
