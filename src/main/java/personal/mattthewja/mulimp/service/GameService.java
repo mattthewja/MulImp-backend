@@ -2,26 +2,27 @@ package personal.mattthewja.mulimp.service;
 
 import org.springframework.stereotype.Service;
 import personal.mattthewja.mulimp.dto.*;
-import personal.mattthewja.mulimp.model.Game;
-import personal.mattthewja.mulimp.model.GameState;
-import personal.mattthewja.mulimp.model.Lobby;
-import personal.mattthewja.mulimp.model.Player;
+import personal.mattthewja.mulimp.model.*;
 import personal.mattthewja.mulimp.store.LobbyStore;
+import personal.mattthewja.mulimp.store.QuestionStore;
 
 import java.time.Instant;
 
 @Service
 public class GameService {
     private final LobbyStore lobbyStore;
+    private final QuestionStore questionStore;
 
-    public GameService(LobbyStore lobbyStore) {
+    public GameService(LobbyStore lobbyStore, QuestionStore questionStore) {
         this.lobbyStore = lobbyStore;
+        this.questionStore = questionStore;
     }
 
     public StartGameResponse startGame(String lobbyId) {
         Lobby lobby = lobbyStore.getLobbyOrThrow(lobbyId);
         synchronized (lobby) {
-            lobby.startGame();
+            QuestionPair questions = questionStore.getRandomQuestionPair();
+            lobby.startGame(questions.getQ1(), questions.getQ2());
             return new StartGameResponse(true);
         }
     }
@@ -43,9 +44,13 @@ public class GameService {
             game.advanceGameState();
             Player player = lobby.getPlayerWithIdOrThrow(playerId);
             player.markActive();
+//            System.out.println(player.getPlayerId() + ":" + player.getName());
 
             GameState gameState = game.getGameState();
-            String question = game.getQuestionFor(player);
+            String question = gameState != GameState.DISCUSSION ?
+                    game.getQuestionFor(player) : game.getRealQuestion();
+//            System.out.println("has answered?: " + game.hasPlayerAnswered(player));
+//            System.out.println("has voted?: " + game.hasPlayerVoted(player));
 
             return new GetPlayerStateResponse(gameState, question,
                     game.hasPlayerAnswered(player),
@@ -64,6 +69,7 @@ public class GameService {
             Player player = lobby.getPlayerWithIdOrThrow(playerId);
 
             game.submitAnswer(player, answer);
+            System.out.println(player.getName() + " answered: " + answer);
             return new PostPlayerAnswerResponse(true);
         }
     }

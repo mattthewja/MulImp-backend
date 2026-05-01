@@ -13,11 +13,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LobbyStore {
     Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
 
-    @PostConstruct
-    public void initDevData() {
-        Lobby devLobby = new Lobby(true,"DevCreator");
-        lobbies.putIfAbsent(devLobby.getLobbyId(), devLobby);
-    }
+//    @PostConstruct
+//    @Deprecated
+//    public void initDevData() {
+//        Lobby devLobby = new Lobby(true,"DevCreator");
+//        lobbies.putIfAbsent(devLobby.getLobbyId(), devLobby);
+//    }
 
     public Lobby createLobby(Player creator) {
         Lobby lobby = new Lobby(creator);

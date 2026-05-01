@@ -22,7 +22,7 @@ public class Player {
     }
 
     public boolean isActive() {
-        return lastSeen.compareTo(Instant.now().plus(INACTIVE_TIMEOUT_TIME, ChronoUnit.SECONDS)) > 0;
+        return lastSeen.compareTo(Instant.now().plus(INACTIVE_TIMEOUT_TIME, ChronoUnit.SECONDS)) <= 0;
     }
 
     public void markActive() {

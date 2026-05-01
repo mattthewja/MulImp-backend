@@ -12,8 +12,8 @@ import java.util.Map;
 @Getter
 public class Game {
     // dev testing, these should be 30, 180, and 10 respectively
-    private static final int ANSWERING_DURATION = 10;
-    private static final int DISCUSSION_DURATION = 10;
+    private static final int ANSWERING_DURATION = 30;
+    private static final int DISCUSSION_DURATION = 180;
     private static final int RESULTS_DURATION = 10;
 
     private List<Player> players;
@@ -77,9 +77,9 @@ public class Game {
     }
 
     public void advanceGameState() {
-        if (!isTimeUp() || isInLobby()) return;
+        if (isInLobby()) return;
 
-        if (isTimeUp() || allPlayersAnswered()) {
+        if (isTimeUp() || allPlayersDone()) {
             switch (gameState) {
                 case ANSWERING -> moveToDiscussion();
                 case DISCUSSION -> moveToResults();
@@ -96,10 +96,14 @@ public class Game {
         return player.equals(imposterPlayer) ? imposterQuestion : realQuestion;
     }
 
-    private boolean allPlayersAnswered() {
+    private boolean allPlayersDone() {
         if (gameState == GameState.ANSWERING) {
+            boolean value = players.size() == playerAnswers.size();
+            System.out.println(value);
             return players.size() == playerAnswers.size();
         } else if (gameState == GameState.DISCUSSION) {
+            boolean value = players.size() == playerVotes.size();
+            System.out.println(value);
             return players.size() == playerVotes.size();
         }
 

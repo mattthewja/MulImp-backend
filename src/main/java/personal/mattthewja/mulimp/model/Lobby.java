@@ -23,19 +23,20 @@ public class Lobby {
 
     private final Game game = new Game();
 
-    public Lobby(boolean dev, String creator_name) {
-        Player creator = new Player(creator_name);
-        this.lobbyId = "0";
-        players = new ArrayList<>();
-        players.add(creator);
-        players.add(new Player("1"));
-        players.add(new Player("2"));
-        players.add(new Player("3"));
-        players.add(new Player("4"));
-        players.add(new Player("5"));
-        players.add(new Player("6"));
-        players.add(new Player("7"));
-    }
+//    @Deprecated
+//    public Lobby(boolean dev, String creator_name) {
+//        Player creator = new Player(creator_name);
+//        this.lobbyId = "0";
+//        players = new ArrayList<>();
+//        players.add(creator);
+//        players.add(new Player("1"));
+//        players.add(new Player("2"));
+//        players.add(new Player("3"));
+//        players.add(new Player("4"));
+//        players.add(new Player("5"));
+//        players.add(new Player("6"));
+//        players.add(new Player("7"));
+//    }
 
     public Lobby(String creator_name) {
         Player creator = new Player(creator_name);
@@ -133,15 +134,12 @@ public class Lobby {
         }
     }
 
-    public void startGame() {
+    public void startGame(String real_question, String imposter_question) {
         if (game.getGameState() != GameState.IN_LOBBY) {
             throw new GameHasStartedException();
         }
 
-        // somehow generate these questions
-        // consider a QuestionPairStore
-
-        game.startGame(this.getPlayers(), "Real question", "Imposter Question");
+        game.startGame(this.getPlayers(), real_question, imposter_question);
         lobbyState = LobbyState.IN_GAME;
     }
 
