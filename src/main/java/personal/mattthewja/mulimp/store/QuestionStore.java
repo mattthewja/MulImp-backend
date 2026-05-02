@@ -18,7 +18,7 @@ public class QuestionStore {
             ),
             new QuestionPair(
                     "How many days could you survive without your phone?",
-                    "How many days "
+                    "How many days could you go without sleeping?"
             ),
             new QuestionPair(
                     "Which country would you live in for the rest of your life?",
