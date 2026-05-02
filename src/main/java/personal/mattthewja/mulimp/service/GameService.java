@@ -69,6 +69,7 @@ public class GameService {
             Player player = lobby.getPlayerWithIdOrThrow(playerId);
 
             game.submitAnswer(player, answer);
+            game.advanceGameState();
             System.out.println(player.getName() + " answered: " + answer);
             return new PostPlayerAnswerResponse(true);
         }
@@ -84,6 +85,8 @@ public class GameService {
             Player voted = lobby.getPlayerNamedOrThrow(vote);
 
             game.submitVote(voter, voted);
+            game.advanceGameState();
+            System.out.println(voter.getName() + " answered: " + voted.getName());
             return new PostPlayerVoteResponse(true);
         }
     }

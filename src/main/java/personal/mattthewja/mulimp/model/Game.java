@@ -99,11 +99,9 @@ public class Game {
     private boolean allPlayersDone() {
         if (gameState == GameState.ANSWERING) {
             boolean value = players.size() == playerAnswers.size();
-            System.out.println(value);
             return players.size() == playerAnswers.size();
         } else if (gameState == GameState.DISCUSSION) {
             boolean value = players.size() == playerVotes.size();
-            System.out.println(value);
             return players.size() == playerVotes.size();
         }
 
