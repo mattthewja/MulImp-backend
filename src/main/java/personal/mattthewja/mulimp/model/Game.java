@@ -12,8 +12,8 @@ import java.util.Map;
 @Getter
 public class Game {
     // dev testing, these should be 30, 180, and 10 respectively
-    private static final int ANSWERING_DURATION = 30;
-    private static final int DISCUSSION_DURATION = 180;
+    private static final int ANSWERING_DURATION = 9999;
+    private static final int DISCUSSION_DURATION = 9999;
     private static final int RESULTS_DURATION = 10;
 
     private List<Player> players;
@@ -118,12 +118,12 @@ public class Game {
 
     private void moveToDiscussion() {
         gameState = GameState.DISCUSSION;
-        phaseEndsAt = phaseEndsAt.plusSeconds(DISCUSSION_DURATION);
+        phaseEndsAt = Instant.now().plusSeconds(DISCUSSION_DURATION);
     }
 
     private void moveToResults() {
         gameState = GameState.RESULTS;
-        phaseEndsAt = phaseEndsAt.plusSeconds(RESULTS_DURATION);
+        phaseEndsAt = Instant.now().plusSeconds(RESULTS_DURATION);
     }
 
     private void returnToLobby() {
